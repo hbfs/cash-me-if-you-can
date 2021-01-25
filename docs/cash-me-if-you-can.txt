@@ -1,0 +1,50 @@
+# cash me if you can
+
+toy payments engine
+
+deposit => increase available, total
+withdrawal => decrease avaialble, total
+	if not enough, fail and no change
+
+disputes => tx errornous, and funds held not yet reversed, 
+	availbe decrease by amount disputed
+	held increase by amount disputed
+	no amount, references amount by tx id
+	if tx does not exists, assume partner error, no change
+
+resolutions => dispute resolved
+	held funds decrease by amount disputed
+	disputed
+	if tx does not exists, or not disputed, assume partner error, no change
+
+chargeback => held funds withdrawan
+	held funds decrease by amount disputed
+	total funds decrease by amount disputed
+	freeze account
+	if tx does not exists, or not disputed, assume partner error, no change
+
+available = total - held
+held (held for dispute) = total - available
+total = available + held
+locked , locked if charge back
+
+four decimal places
+
+1 * 10000
+= 1.0000
+
+type	client	tx	amount
+
+streams => queue => process queue + locks
+
+tx 
+	id = u32
+	status = [normal, disputed, resolved, chargeback]
+
+client
+	id = u16
+	total
+	available
+	held
+	locked
+	LOCK
